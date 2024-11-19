@@ -1,0 +1,21 @@
+[package]
+name = "pzexeconfig-installer"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+futures-io = "0.3.31"
+regex = "1.11.1"
+registry = "1.3.0"
+reqwest = { version = "0.12.9", features = ["blocking"] }
+tracing = "0.1.40"
+tracing-appender = "0.2.3"
+tracing-subscriber = { version = "0.3.18", features = ["fmt"] }
+
+[[bin]]
+name = "install"
+path = "src/install.rs"
+
+[[bin]]
+name = "overwrite"
+path = "src/overwrite.rs"

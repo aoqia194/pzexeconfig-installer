@@ -1,13 +1,11 @@
 use metadata::LevelFilter;
 use regex::Regex;
 use registry::{Hive, Security};
-use std::env::current_exe;
 use std::fs;
 use std::io::{stdout, Read, Write};
 use std::path::PathBuf;
 use std::sync::LazyLock;
 use tracing::*;
-use tracing_appender::rolling::{RollingFileAppender, Rotation};
 use tracing_subscriber::fmt::format::FmtSpan;
 use tracing_subscriber::fmt::layer;
 use tracing_subscriber::layer::SubscriberExt;
@@ -22,27 +20,6 @@ const LIBRARY_REGEX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"\s*"path"\s*"(.*?)"[^}]*"apps"\s*\{[^}]*"108600"#).unwrap());
 
 fn setup_logger() {
-    let dir = current_exe().unwrap().parent().unwrap().join("logs/");
-
-    let file_appender = RollingFileAppender::builder()
-        .rotation(Rotation::HOURLY)
-        .filename_suffix("log")
-        .build(dir)
-        .unwrap();
-
-    let file_layer = layer()
-        .with_writer(file_appender)
-        .compact()
-        .with_ansi(false)
-        .with_file(true)
-        .with_thread_ids(true)
-        .with_thread_names(false)
-        .with_line_number(true)
-        .with_level(true)
-        .with_target(true)
-        .with_span_events(FmtSpan::FULL)
-        .with_filter(LevelFilter::TRACE);
-
     let stdout_layer = layer()
         .with_writer(stdout)
         .with_file(false)
@@ -58,7 +35,6 @@ fn setup_logger() {
         });
 
     tracing_subscriber::registry()
-        .with(file_layer)
         .with(stdout_layer)
         .init();
 }

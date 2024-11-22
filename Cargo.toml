@@ -1,7 +1,15 @@
 [package]
 name = "pzexeconfig-installer"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
+
+[[bin]]
+name = "install"
+path = "src/install.rs"
+
+[[bin]]
+name = "overwrite"
+path = "src/overwrite.rs"
 
 [dependencies]
 futures-io = "0.3.31"
@@ -12,10 +20,5 @@ tracing = "0.1.40"
 tracing-appender = "0.2.3"
 tracing-subscriber = { version = "0.3.18", features = ["fmt"] }
 
-[[bin]]
-name = "install"
-path = "src/install.rs"
-
-[[bin]]
-name = "overwrite"
-path = "src/overwrite.rs"
+[build-dependencies]
+winresource = "0.1.17"

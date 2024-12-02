@@ -4,6 +4,7 @@ use registry::{Hive, Security};
 use std::fs;
 use std::io::{stdout, Read, Write};
 use std::path::PathBuf;
+use std::process::Command;
 use std::sync::LazyLock;
 use tracing::*;
 use tracing_subscriber::fmt::format::FmtSpan;
@@ -27,6 +28,7 @@ fn setup_logger() {
         .with_line_number(false)
         .with_target(true)
         .with_level(true)
+        .with_ansi(false)
         .with_span_events(FmtSpan::FULL)
         .with_filter(if cfg!(debug_assertions) {
             LevelFilter::DEBUG
@@ -34,9 +36,7 @@ fn setup_logger() {
             LevelFilter::INFO
         });
 
-    tracing_subscriber::registry()
-        .with(stdout_layer)
-        .init();
+    tracing_subscriber::registry().with(stdout_layer).init();
 }
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -99,7 +99,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     file.write_all(data.as_bytes())
         .expect("Failed to write all bytes to config file");
 
-    info!("Done installing!");
+    info!("Install complete! You can now close this window.");
+    let _ = Command::new("cmd.exe").arg("/c").arg("pause").status();
 
     return Ok(());
 }
